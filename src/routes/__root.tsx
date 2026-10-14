@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "HookForge — AI Content Performance Copilot" },
+      { title: "ContentLens — AI Content Performance Copilot" },
       { name: "description", content: "Find out why your content performed the way it did and what to create next." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
