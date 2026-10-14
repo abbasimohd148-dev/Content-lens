@@ -33,10 +33,26 @@
   --color-ring: var(--ring);
   --color-ink: var(--ink);
   --color-ink-foreground: var(--ink-foreground);
+  --color-observed: var(--observed);
+  --color-pattern: var(--pattern);
+  --color-hypothesis: var(--hypothesis);
+  --color-success: var(--success);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.5rem;
   --background: oklch(0.985 0.006 85);
   --foreground: oklch(0.2 0.02 60);
   --card: oklch(1 0 0);
@@ -58,6 +74,22 @@
   --ring: oklch(0.64 0.19 42);
   --ink: oklch(0.2 0.02 60);
   --ink-foreground: oklch(0.97 0.008 85);
+  --observed: oklch(0.5 0.13 250);
+  --pattern: oklch(0.52 0.12 155);
+  --hypothesis: oklch(0.58 0.13 75);
+  --success: oklch(0.55 0.13 155);
+  --chart-1: oklch(0.64 0.19 42);
+  --chart-2: oklch(0.75 0.02 70);
+  --sidebar: oklch(0.975 0.006 85);
+  --sidebar-foreground: oklch(0.3 0.02 60);
+  --sidebar-primary: oklch(0.64 0.19 42);
+  --sidebar-primary-foreground: oklch(0.99 0.005 85);
+  --sidebar-accent: oklch(0.935 0.01 80);
+  --sidebar-accent-foreground: oklch(0.2 0.02 60);
+  --sidebar-border: oklch(0.91 0.01 80);
+  --sidebar-ring: oklch(0.64 0.19 42);
+  --shadow-card: 0 1px 2px oklch(0.2 0.02 60 / 0.04), 0 1px 1px oklch(0.2 0.02 60 / 0.03);
+  --shadow-float: 0 24px 48px -16px oklch(0.2 0.02 60 / 0.18), 0 2px 6px oklch(0.2 0.02 60 / 0.05);
 }
 
 .dark {
@@ -82,6 +114,22 @@
   --ring: oklch(0.72 0.18 45);
   --ink: oklch(0.96 0.008 85);
   --ink-foreground: oklch(0.17 0.012 60);
+  --observed: oklch(0.72 0.12 250);
+  --pattern: oklch(0.74 0.13 155);
+  --hypothesis: oklch(0.8 0.13 80);
+  --success: oklch(0.74 0.13 155);
+  --chart-1: oklch(0.72 0.18 45);
+  --chart-2: oklch(0.45 0.015 60);
+  --sidebar: oklch(0.15 0.01 60);
+  --sidebar-foreground: oklch(0.85 0.01 80);
+  --sidebar-primary: oklch(0.72 0.18 45);
+  --sidebar-primary-foreground: oklch(0.17 0.012 60);
+  --sidebar-accent: oklch(0.24 0.012 60);
+  --sidebar-accent-foreground: oklch(0.96 0.008 85);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.72 0.18 45);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-float: 0 24px 48px -16px oklch(0 0 0 / 0.6);
 }
 
 @layer base {
@@ -92,4 +140,10 @@
     font-family: var(--font-sans);
   }
   h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; }
+}
+
+@utility tabular { font-variant-numeric: tabular-nums; }
+@utility dot-grid {
+  background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
