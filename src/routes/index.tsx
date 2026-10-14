@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteNav } from "@/components/SiteNav";
+import { SiteNav, SiteFooter } from "@/components/SiteNav";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -77,6 +77,7 @@ function Landing() {
           <p className="mt-10 text-sm text-muted-foreground">ContentLens shows correlations in your data — it never promises viral results.</p>
         </div>
       </section>
+      <SiteFooter />
     </div>
   );
 }

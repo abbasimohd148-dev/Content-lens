@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteNav } from "@/components/SiteNav";
+import { SiteNav, SiteFooter } from "@/components/SiteNav";
 import { PLANS, PLAN_ORDER } from "@/config/pricing";
 
 export const Route = createFileRoute("/pricing")({
@@ -46,6 +46,7 @@ function Pricing() {
           })}
         </div>
       </section>
+      <SiteFooter />
     </div>
   );
 }
