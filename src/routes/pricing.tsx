@@ -5,9 +5,9 @@ import { PLANS, PLAN_ORDER } from "@/config/pricing";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — HookForge" },
-      { name: "description", content: "Free, Pro ($19/mo) and Business ($49/mo) plans for HookForge. Monthly billing." },
-      { property: "og:title", content: "Pricing — HookForge" },
+      { title: "Pricing — ContentLens" },
+      { name: "description", content: "Free, Pro ($19/mo) and Business ($49/mo) plans for ContentLens. Monthly billing." },
+      { property: "og:title", content: "Pricing — ContentLens" },
       { property: "og:description", content: "Simple monthly plans for creators and small teams." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
