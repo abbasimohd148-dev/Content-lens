@@ -14,10 +14,14 @@ import { Route as WorkspaceRouteImport } from './routes/_workspace'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as WorkspaceBillingRouteImport } from './routes/_workspace.billing'
 import { Route as WorkspaceCompareRouteImport } from './routes/_workspace.compare'
 import { Route as WorkspaceContentRouteImport } from './routes/_workspace.content'
 import { Route as WorkspaceDashboardRouteImport } from './routes/_workspace.dashboard'
 import { Route as WorkspaceDiagnosisRouteImport } from './routes/_workspace.diagnosis'
+import { Route as WorkspacePatternsRouteImport } from './routes/_workspace.patterns'
+import { Route as WorkspaceRecommendationsRouteImport } from './routes/_workspace.recommendations'
+import { Route as WorkspaceSettingsRouteImport } from './routes/_workspace.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -43,6 +47,11 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceBillingRoute = WorkspaceBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 const WorkspaceCompareRoute = WorkspaceCompareRouteImport.update({
   id: '/compare',
   path: '/compare',
@@ -63,26 +72,50 @@ const WorkspaceDiagnosisRoute = WorkspaceDiagnosisRouteImport.update({
   path: '/diagnosis',
   getParentRoute: () => WorkspaceRoute,
 } as any)
+const WorkspacePatternsRoute = WorkspacePatternsRouteImport.update({
+  id: '/patterns',
+  path: '/patterns',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceRecommendationsRoute =
+  WorkspaceRecommendationsRouteImport.update({
+    id: '/recommendations',
+    path: '/recommendations',
+    getParentRoute: () => WorkspaceRoute,
+  } as any)
+const WorkspaceSettingsRoute = WorkspaceSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/billing': typeof WorkspaceBillingRoute
   '/compare': typeof WorkspaceCompareRoute
   '/content': typeof WorkspaceContentRoute
   '/dashboard': typeof WorkspaceDashboardRoute
   '/diagnosis': typeof WorkspaceDiagnosisRoute
+  '/patterns': typeof WorkspacePatternsRoute
+  '/recommendations': typeof WorkspaceRecommendationsRoute
+  '/settings': typeof WorkspaceSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/billing': typeof WorkspaceBillingRoute
   '/compare': typeof WorkspaceCompareRoute
   '/content': typeof WorkspaceContentRoute
   '/dashboard': typeof WorkspaceDashboardRoute
   '/diagnosis': typeof WorkspaceDiagnosisRoute
+  '/patterns': typeof WorkspacePatternsRoute
+  '/recommendations': typeof WorkspaceRecommendationsRoute
+  '/settings': typeof WorkspaceSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -91,10 +124,14 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/_workspace/billing': typeof WorkspaceBillingRoute
   '/_workspace/compare': typeof WorkspaceCompareRoute
   '/_workspace/content': typeof WorkspaceContentRoute
   '/_workspace/dashboard': typeof WorkspaceDashboardRoute
   '/_workspace/diagnosis': typeof WorkspaceDiagnosisRoute
+  '/_workspace/patterns': typeof WorkspacePatternsRoute
+  '/_workspace/recommendations': typeof WorkspaceRecommendationsRoute
+  '/_workspace/settings': typeof WorkspaceSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -103,20 +140,28 @@ export interface FileRouteTypes {
     | '/login'
     | '/pricing'
     | '/signup'
+    | '/billing'
     | '/compare'
     | '/content'
     | '/dashboard'
     | '/diagnosis'
+    | '/patterns'
+    | '/recommendations'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/pricing'
     | '/signup'
+    | '/billing'
     | '/compare'
     | '/content'
     | '/dashboard'
     | '/diagnosis'
+    | '/patterns'
+    | '/recommendations'
+    | '/settings'
   id:
     | '__root__'
     | '/'
@@ -124,10 +169,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/pricing'
     | '/signup'
+    | '/_workspace/billing'
     | '/_workspace/compare'
     | '/_workspace/content'
     | '/_workspace/dashboard'
     | '/_workspace/diagnosis'
+    | '/_workspace/patterns'
+    | '/_workspace/recommendations'
+    | '/_workspace/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -175,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_workspace/billing': {
+      id: '/_workspace/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof WorkspaceBillingRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
     '/_workspace/compare': {
       id: '/_workspace/compare'
       path: '/compare'
@@ -203,21 +259,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceDiagnosisRouteImport
       parentRoute: typeof WorkspaceRoute
     }
+    '/_workspace/patterns': {
+      id: '/_workspace/patterns'
+      path: '/patterns'
+      fullPath: '/patterns'
+      preLoaderRoute: typeof WorkspacePatternsRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/recommendations': {
+      id: '/_workspace/recommendations'
+      path: '/recommendations'
+      fullPath: '/recommendations'
+      preLoaderRoute: typeof WorkspaceRecommendationsRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/settings': {
+      id: '/_workspace/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof WorkspaceSettingsRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
   }
 }
 
 interface WorkspaceRouteChildren {
+  WorkspaceBillingRoute: typeof WorkspaceBillingRoute
   WorkspaceCompareRoute: typeof WorkspaceCompareRoute
   WorkspaceContentRoute: typeof WorkspaceContentRoute
   WorkspaceDashboardRoute: typeof WorkspaceDashboardRoute
   WorkspaceDiagnosisRoute: typeof WorkspaceDiagnosisRoute
+  WorkspacePatternsRoute: typeof WorkspacePatternsRoute
+  WorkspaceRecommendationsRoute: typeof WorkspaceRecommendationsRoute
+  WorkspaceSettingsRoute: typeof WorkspaceSettingsRoute
 }
 
 const WorkspaceRouteChildren: WorkspaceRouteChildren = {
+  WorkspaceBillingRoute: WorkspaceBillingRoute,
   WorkspaceCompareRoute: WorkspaceCompareRoute,
   WorkspaceContentRoute: WorkspaceContentRoute,
   WorkspaceDashboardRoute: WorkspaceDashboardRoute,
   WorkspaceDiagnosisRoute: WorkspaceDiagnosisRoute,
+  WorkspacePatternsRoute: WorkspacePatternsRoute,
+  WorkspaceRecommendationsRoute: WorkspaceRecommendationsRoute,
+  WorkspaceSettingsRoute: WorkspaceSettingsRoute,
 }
 
 const WorkspaceRouteWithChildren = WorkspaceRoute._addFileChildren(
