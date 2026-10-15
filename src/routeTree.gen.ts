@@ -10,13 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkspaceRouteImport } from './routes/_workspace'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as WorkspaceCompareRouteImport } from './routes/_workspace.compare'
+import { Route as WorkspaceContentRouteImport } from './routes/_workspace.content'
+import { Route as WorkspaceDashboardRouteImport } from './routes/_workspace.dashboard'
+import { Route as WorkspaceDiagnosisRouteImport } from './routes/_workspace.diagnosis'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkspaceRoute = WorkspaceRouteImport.update({
+  id: '/_workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -34,36 +43,96 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceCompareRoute = WorkspaceCompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceContentRoute = WorkspaceContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceDashboardRoute = WorkspaceDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceDiagnosisRoute = WorkspaceDiagnosisRouteImport.update({
+  id: '/diagnosis',
+  path: '/diagnosis',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/compare': typeof WorkspaceCompareRoute
+  '/content': typeof WorkspaceContentRoute
+  '/dashboard': typeof WorkspaceDashboardRoute
+  '/diagnosis': typeof WorkspaceDiagnosisRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/compare': typeof WorkspaceCompareRoute
+  '/content': typeof WorkspaceContentRoute
+  '/dashboard': typeof WorkspaceDashboardRoute
+  '/diagnosis': typeof WorkspaceDiagnosisRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_workspace': typeof WorkspaceRouteWithChildren
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/_workspace/compare': typeof WorkspaceCompareRoute
+  '/_workspace/content': typeof WorkspaceContentRoute
+  '/_workspace/dashboard': typeof WorkspaceDashboardRoute
+  '/_workspace/diagnosis': typeof WorkspaceDiagnosisRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/pricing' | '/signup'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/pricing'
+    | '/signup'
+    | '/compare'
+    | '/content'
+    | '/dashboard'
+    | '/diagnosis'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/pricing' | '/signup'
-  id: '__root__' | '/' | '/login' | '/pricing' | '/signup'
+  to:
+    | '/'
+    | '/login'
+    | '/pricing'
+    | '/signup'
+    | '/compare'
+    | '/content'
+    | '/dashboard'
+    | '/diagnosis'
+  id:
+    | '__root__'
+    | '/'
+    | '/_workspace'
+    | '/login'
+    | '/pricing'
+    | '/signup'
+    | '/_workspace/compare'
+    | '/_workspace/content'
+    | '/_workspace/dashboard'
+    | '/_workspace/diagnosis'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  WorkspaceRoute: typeof WorkspaceRouteWithChildren
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   SignupRoute: typeof SignupRoute
@@ -76,6 +145,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_workspace': {
+      id: '/_workspace'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -99,11 +175,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_workspace/compare': {
+      id: '/_workspace/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof WorkspaceCompareRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/content': {
+      id: '/_workspace/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof WorkspaceContentRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/dashboard': {
+      id: '/_workspace/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof WorkspaceDashboardRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/diagnosis': {
+      id: '/_workspace/diagnosis'
+      path: '/diagnosis'
+      fullPath: '/diagnosis'
+      preLoaderRoute: typeof WorkspaceDiagnosisRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
   }
 }
 
+interface WorkspaceRouteChildren {
+  WorkspaceCompareRoute: typeof WorkspaceCompareRoute
+  WorkspaceContentRoute: typeof WorkspaceContentRoute
+  WorkspaceDashboardRoute: typeof WorkspaceDashboardRoute
+  WorkspaceDiagnosisRoute: typeof WorkspaceDiagnosisRoute
+}
+
+const WorkspaceRouteChildren: WorkspaceRouteChildren = {
+  WorkspaceCompareRoute: WorkspaceCompareRoute,
+  WorkspaceContentRoute: WorkspaceContentRoute,
+  WorkspaceDashboardRoute: WorkspaceDashboardRoute,
+  WorkspaceDiagnosisRoute: WorkspaceDiagnosisRoute,
+}
+
+const WorkspaceRouteWithChildren = WorkspaceRoute._addFileChildren(
+  WorkspaceRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  WorkspaceRoute: WorkspaceRouteWithChildren,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   SignupRoute: SignupRoute,
