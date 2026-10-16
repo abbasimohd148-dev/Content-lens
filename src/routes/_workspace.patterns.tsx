@@ -50,7 +50,7 @@ function Patterns() {
         </Panel>
       </div>
       <Panel title="Interpretation" description="Example analysis — illustrative layout" className="mt-4" bodyClassName="py-0">
-        <EvidenceItem kind="pattern" meta={`n=${topics[0].n}`}>{topics[0].topic} has {topics[0].lift.toFixed(1)}× the median views of your content overall.</EvidenceItem>
+        <EvidenceItem kind="pattern" meta={`n=${topics[0]!.n}`}>{topics[0]!.topic} has {topics[0]!.lift.toFixed(1)}× the median views of your content overall.</EvidenceItem>
         <EvidenceItem kind="pattern" meta="n=24">Hooks that name a number or outcome appear more often in your top quartile.</EvidenceItem>
         <EvidenceItem kind="hypothesis">Opinion pieces may underperform because they lack a concrete promise. Not enough data yet for a reliable conclusion.</EvidenceItem>
       </Panel>

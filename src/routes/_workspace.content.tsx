@@ -26,7 +26,7 @@ function ContentPage() {
     const key: Record<string, (c: (typeof list)[number]) => number> = {
       views: (c) => c.views, retention: (c) => c.retention, engagement, date: (c) => +new Date(c.postedAt),
     };
-    return list.sort((a, b) => key[sort](b) - key[sort](a));
+    return list.sort((a, b) => key[sort]!(b) - key[sort]!(a));
   }, [q, topic, platform, sort]);
 
   return (

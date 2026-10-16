@@ -78,7 +78,7 @@ function Landing() {
                 {topics.slice(0, 4).map((t) => (
                   <div key={t.topic}>
                     <div className="flex justify-between text-sm"><span>{t.topic}</span><span className="font-mono text-xs text-muted-foreground">{t.lift.toFixed(1)}× · n={t.n}</span></div>
-                    <div className="mt-1 h-1.5 rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${(t.lift / topics[0].lift) * 100}%` }} /></div>
+                    <div className="mt-1 h-1.5 rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${(t.lift / topics[0]!.lift) * 100}%` }} /></div>
                   </div>
                 ))}
               </div>
