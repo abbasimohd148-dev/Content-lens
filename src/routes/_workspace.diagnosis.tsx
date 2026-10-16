@@ -41,7 +41,7 @@ function Diagnosis() {
         <Panel title="Performance summary" description="Example analysis — illustrative layout" className="lg:col-span-2" bodyClassName="py-0">
           <EvidenceItem kind="observed" meta={`median ${fmt(med)}`}>This post received <b>{ratio.toFixed(1)}×</b> your median views.</EvidenceItem>
           <EvidenceItem kind="observed" meta={`median ${medRet}%`}>Retention was {c.retention}%, {c.retention >= medRet ? "above" : "below"} your historical median of {medRet}%.</EvidenceItem>
-          <EvidenceItem kind="pattern" meta="n=8">Posts in {c.topic} have {c.topic === "AI Tutorials" ? "higher" : "different"} median retention than your other topics in this dataset.</EvidenceItem>
+          <EvidenceItem kind="pattern" meta={`n=${DEMO_CONTENT.filter((x) => x.topic === c.topic).length}`}>Posts in {c.topic} have {c.topic === "AI Tutorials" ? "higher" : "different"} median retention than your other topics in this dataset.</EvidenceItem>
           <EvidenceItem kind="hypothesis">The hook states a concrete outcome up front, which may have helped early retention. This is correlation, not proof.</EvidenceItem>
         </Panel>
       </div>

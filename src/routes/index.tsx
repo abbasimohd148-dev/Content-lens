@@ -111,8 +111,8 @@ function Landing() {
           <Feature eyebrow="Performance Diagnosis" title="Know why a post performed — not just that it did."
             body="Every diagnosis separates what was observed, what your data supports, and what's only a hypothesis. No causal claims your data can't back.">
             <div className="rounded-lg border bg-card px-4 shadow-card">
-              <EvidenceItem kind="observed" meta="median 24k">This video received 3.0× your median views.</EvidenceItem>
-              <EvidenceItem kind="pattern" meta="n=8">AI Tutorials have higher median retention in your dataset.</EvidenceItem>
+              <EvidenceItem kind="observed" meta={`median ${fmt(s.medianViews)}`}>This video received 2.4× your median views.</EvidenceItem>
+              <EvidenceItem kind="pattern" meta={`n=${topics[0]!.n}`}>AI Tutorials have higher median retention in your dataset.</EvidenceItem>
               <EvidenceItem kind="hypothesis">Showing the result first may have helped early retention.</EvidenceItem>
             </div>
           </Feature>

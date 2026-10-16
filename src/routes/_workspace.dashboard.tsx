@@ -51,7 +51,7 @@ function Dashboard() {
 
       <Panel title="Biggest opportunities" className="mt-4" bodyClassName="py-0">
         <EvidenceItem kind="observed" meta="n=24">Videos over 12 minutes sit at a median 39% retention, versus 63% for 8–10 minute videos.</EvidenceItem>
-        <EvidenceItem kind="pattern" meta="n=8">AI Tutorials earn about {topics[0]!.lift.toFixed(1)}× your median views — your strongest topic in this dataset.</EvidenceItem>
+        <EvidenceItem kind="pattern" meta={`n=${topics[0]!.n}`}>AI Tutorials earn about {topics[0]!.lift.toFixed(1)}× your median views — your strongest topic in this dataset.</EvidenceItem>
         <EvidenceItem kind="hypothesis">Hooks that show the finished result first may hold attention better. Test this on your next two uploads.</EvidenceItem>
         <div className="py-3">
           <Link to="/recommendations" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">See what to create next <ArrowRight className="h-3.5 w-3.5" /></Link>
