@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteNav, SiteFooter } from "@/components/SiteNav";
 import { PLANS, PLAN_ORDER } from "@/config/pricing";
 
@@ -21,14 +21,14 @@ function Pricing() {
     <div className="min-h-screen">
       <SiteNav />
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <h1 className="text-4xl font-semibold">Pricing</h1>
-        <p className="mt-3 text-muted-foreground">Monthly billing. Cancel anytime.</p>
+        <h1 className="text-3xl font-semibold">Pricing</h1>
+        <p className="mt-3 text-muted-foreground">Monthly billing. Paid checkout opens soon — every account starts on Free.</p>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {PLAN_ORDER.map((id) => {
             const p = PLANS[id];
             const featured = id === "pro";
             return (
-              <div key={id} className={`flex flex-col rounded-2xl border bg-card p-7 ${featured ? "border-primary ring-1 ring-primary" : ""}`}>
+              <div key={id} className={`flex flex-col rounded-lg border bg-card p-6 shadow-card ${featured ? "border-primary ring-1 ring-primary" : ""}`}>
                 <h2 className="text-xl font-semibold">{p.name}</h2>
                 {p.label && <p className="mt-1 text-sm text-primary">{p.label}</p>}
                 <p className="mt-5"><span className="font-display text-4xl font-semibold">${p.price}</span><span className="text-muted-foreground">/month</span></p>
@@ -40,7 +40,7 @@ function Pricing() {
                   <li>{p.limits.recommendationsPerMonth} AI recommendations / month</li>
                   {p.features.map((f) => <li key={f} className="text-muted-foreground">{f}</li>)}
                 </ul>
-                <button className={`mt-8 rounded-lg px-4 py-3 font-medium ${featured ? "bg-primary text-primary-foreground" : "bg-ink text-ink-foreground"} hover:opacity-90`}>{p.cta}</button>
+                <Link to="/signup" className={`mt-8 rounded-md px-4 py-2.5 text-center text-sm font-medium ${featured ? "bg-primary text-primary-foreground" : "bg-ink text-ink-foreground"} hover:opacity-90`}>{p.cta}</Link>
               </div>
             );
           })}
