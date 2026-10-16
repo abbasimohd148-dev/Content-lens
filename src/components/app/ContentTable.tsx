@@ -11,7 +11,7 @@ export function ContentTable({ items, compact }: { items: DemoContent[]; compact
             {!compact && <th className="px-4 py-2 font-medium">Topic</th>}
             <th className="px-4 py-2 text-right font-medium">Views</th>
             <th className="px-4 py-2 text-right font-medium">Retention</th>
-            <th className="px-4 py-2 text-right font-medium">Engagement</th>
+            <th className="px-4 py-2 text-right font-medium">{compact ? "Engage." : "Engagement"}</th>
           </tr>
         </thead>
         <tbody>
