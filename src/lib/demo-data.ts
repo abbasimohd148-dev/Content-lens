@@ -57,7 +57,8 @@ export const engagement = (c: DemoContent) =>
 export const median = (xs: number[]) => {
   const s = [...xs].sort((a, b) => a - b);
   const m = Math.floor(s.length / 2);
-  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+  if (!s.length) return 0;
+  return s.length % 2 ? s[m]! : (s[m - 1]! + s[m]!) / 2;
 };
 
 export const fmt = (n: number) =>
