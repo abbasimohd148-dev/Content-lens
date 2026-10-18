@@ -1,46 +1,48 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
-import { PageHeader } from "@/components/app/primitives";
-import { EvidenceTag } from "@/components/app/primitives";
+import { PageHeader, Panel, EvidenceItem, EvidenceTag } from "@/components/app/primitives";
+import { AiPlaceholder, EmptyContentState, InsufficientData } from "@/components/app/states";
 import { Button } from "@/components/ui/button";
+import { useContent } from "@/lib/content-repository";
+import { byDuration, byPlatform, byTopic, pct } from "@/lib/analytics";
 
 export const Route = createFileRoute("/_workspace/recommendations")({
   head: () => ({ meta: [{ title: "Recommendations — ContentLens" }, { name: "description", content: "What should you create next, grounded in your data." }] }),
   component: Recs,
 });
 
-const recs = [
-  { idea: "Show 3 AI tools that automate a real workflow", hook: "I automated 4 hours of work — watch the result first.", format: "Tutorial", duration: "8–10 min", why: "Matches your strongest topic and duration range.", evidence: "AI Tutorials: 2.6× median views (n=8)" },
-  { idea: "Side-by-side test of 3 caption tools", hook: "Same clip, three tools. One is clearly better.", format: "Comparison", duration: "Under 1 min", why: "Short comparisons hold retention on TikTok/Instagram.", evidence: "Tool Comparisons: 1.5× median views (n=3)" },
-  { idea: "Before/after: rebuilding a thumbnail with AI", hook: "This thumbnail got 3× the clicks. Here's the redo.", format: "Before/after", duration: "Under 1 min", why: "Visual result-first hooks appear in your top quartile.", evidence: "Top quartile: 5 of 6 open with a result" },
-  { idea: "Budget lighting setup, step by step", hook: "Three lights, $50, no studio.", format: "Tutorial", duration: "1–5 min", why: "Gear content with a price anchor performs above median.", evidence: "Gear: 1.1× median views (n=5)" },
-  { idea: "One video into ten posts — full workflow", hook: "One recording, ten posts. Here's every step.", format: "Workflow", duration: "8–10 min", why: "Repurposing posts were among your highest retention.", evidence: "65% retention vs 55% median" },
-];
-
 function Recs() {
+  const { items } = useContent();
+  const header = <PageHeader title="What should I create next?" description="Ideas grounded in your own history. Suggestions to test — never guarantees."
+    actions={<Button disabled title="Available once AI analysis is configured"><Sparkles /> Generate ideas</Button>} />;
+  if (!items.length) return <>{header}<EmptyContentState /></>;
+  const reliable = <T extends { lowSample: boolean }>(g: T[]) => g.filter((x) => !x.lowSample);
+  const topic = reliable(byTopic(items))[0];
+  const dur = reliable(byDuration(items)).sort((a, b) => (b.medianRetention ?? -1) - (a.medianRetention ?? -1))[0];
+  const plat = reliable(byPlatform(items))[0];
+
   return (
     <>
-      <PageHeader title="What should I create next?" description="Five ideas grounded in your own history. Suggestions to test — not guarantees."
-        actions={<Button disabled title="AI generation is available once the backend is connected"><Sparkles /> Generate new</Button>} />
-      <div className="divide-y rounded-lg border bg-card shadow-card">
-        {recs.map((r, i) => (
-          <article key={r.idea} className="grid gap-4 p-5 md:grid-cols-[2rem_1fr_16rem]">
-            <span className="font-mono text-sm text-muted-foreground">0{i + 1}</span>
-            <div className="min-w-0">
-              <h2 className="font-sans text-base font-semibold tracking-normal">{r.idea}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Hook: <span className="text-foreground">"{r.hook}"</span></p>
-              <p className="mt-2 text-sm text-muted-foreground">{r.why}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-                <EvidenceTag kind="pattern" /><span className="font-mono text-muted-foreground">{r.evidence}</span>
-              </div>
-            </div>
-            <dl className="grid grid-cols-2 gap-2 self-start rounded-md bg-muted/60 p-3 text-xs md:grid-cols-1">
-              <div><dt className="text-muted-foreground">Format</dt><dd className="font-medium">{r.format}</dd></div>
-              <div><dt className="text-muted-foreground">Duration</dt><dd className="font-medium">{r.duration}</dd></div>
-            </dl>
-          </article>
-        ))}
-      </div>
+      {header}
+      <Panel title="Starting points from your data" description="Calculated, not AI-generated" bodyClassName="py-0">
+        {topic?.lift ? <EvidenceItem kind="pattern" meta={`n=${topic.n}`}>Strongest topic: <b>{topic.key}</b> ({topic.lift.toFixed(1)}× median views).</EvidenceItem> : null}
+        {dur?.medianRetention != null ? <EvidenceItem kind="pattern" meta={`n=${dur.n}`}>Best-retaining length: <b>{dur.key}</b> ({pct(dur.medianRetention)} median retention).</EvidenceItem> : null}
+        {plat?.lift ? <EvidenceItem kind="pattern" meta={`n=${plat.n}`}>Strongest platform: <b>{plat.key}</b> ({plat.lift.toFixed(1)}× median views).</EvidenceItem> : null}
+        {!topic && !dur && !plat && <InsufficientData>Not enough posts per group for reliable starting points yet.</InsufficientData>}
+      </Panel>
+
+      <h2 className="mb-3 mt-8 font-sans text-sm font-semibold tracking-normal">Content ideas</h2>
+      <article className="grid gap-4 rounded-lg border bg-card p-5 shadow-card md:grid-cols-[1fr_16rem]">
+        <div className="space-y-3">
+          <AiPlaceholder title="Ideas will be generated after AI is configured">Each idea will include a suggested hook, format, length and the evidence behind it, labelled as:</AiPlaceholder>
+          <div className="flex flex-wrap gap-2"><EvidenceTag kind="observed" /><EvidenceTag kind="pattern" /><EvidenceTag kind="hypothesis" /></div>
+        </div>
+        <dl className="grid grid-cols-2 gap-2 self-start rounded-md bg-muted/60 p-3 text-xs md:grid-cols-1">
+          {["Idea", "Suggested hook", "Format", "Duration", "Supporting evidence"].map((k) => (
+            <div key={k}><dt className="text-muted-foreground">{k}</dt><dd className="font-medium text-muted-foreground">—</dd></div>
+          ))}
+        </dl>
+      </article>
     </>
   );
 }
