@@ -68,7 +68,7 @@ export function PageHeader({ title, description, actions }: { title: string; des
   );
 }
 
-export function Metric({ label, value, delta, hint }: { label: string; value: string; delta?: string; hint?: string }) {
+export function Metric({ label, value, delta, hint }: { label: string; value: string; delta?: string | undefined; hint?: string | undefined }) {
   return (
     <div className="min-w-0 px-4 py-3">
       <p className="truncate text-xs text-muted-foreground">{label}</p>
