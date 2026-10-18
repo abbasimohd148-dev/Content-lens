@@ -4,7 +4,7 @@ import { SiteNav, SiteFooter } from "@/components/SiteNav";
 import { Button } from "@/components/ui/button";
 import { DemoBadge, EvidenceItem, Metric } from "@/components/app/primitives";
 import { PerformanceChart } from "@/components/app/PerformanceChart";
-import { byTopic, fmt, summary } from "@/lib/demo-data";
+import { byTopic as demoTopics, fmt, summary, byWeek } from "@/lib/demo-data";
 import { PLANS, PLAN_ORDER } from "@/config/pricing";
 
 export const Route = createFileRoute("/")({
@@ -35,7 +35,7 @@ const steps = [
 
 function Landing() {
   const s = summary();
-  const topics = byTopic();
+  const topics = demoTopics();
   return (
     <div className="min-h-screen">
       <SiteNav />
@@ -47,7 +47,7 @@ function Landing() {
             <p className="mb-4 text-xs font-medium uppercase tracking-[0.14em] text-primary">AI Content Performance Copilot</p>
             <h1 className="text-4xl font-semibold leading-[1.08] md:text-5xl">Stop guessing what your audience wants.</h1>
             <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
-              ContentLens learns from your own performance data, explains why each post did what it did, and tells you what to test next.
+              ContentLens analyzes your content performance, identifies patterns in your audience's response, and helps you decide what to create next.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Button asChild size="lg" className="px-5"><Link to="/signup">Analyze My Content <ArrowRight /></Link></Button>
@@ -71,7 +71,7 @@ function Landing() {
             <div className="grid md:grid-cols-[1.6fr_1fr]">
               <div className="border-b p-4 md:border-b-0 md:border-r">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">Views per post</p>
-                <PerformanceChart height={190} />
+                <PerformanceChart data={byWeek()} height={190} />
               </div>
               <div className="space-y-3 p-4">
                 <p className="text-xs font-medium text-muted-foreground">Top topics vs. your median</p>

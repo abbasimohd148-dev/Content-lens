@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Eye, TrendingUp, Lightbulb } from "lucide-react";
+import { useContent } from "@/lib/content-repository";
 
 export function DemoBadge({ className }: { className?: string }) {
   return <Badge variant="demo" className={className}>DEMO DATA</Badge>;
@@ -58,7 +59,7 @@ export function PageHeader({ title, description, actions }: { title: string; des
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold sm:text-2xl">{title}</h1>
-          <DemoBadge />
+          <SourceBadge />
         </div>
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
@@ -67,7 +68,7 @@ export function PageHeader({ title, description, actions }: { title: string; des
   );
 }
 
-export function Metric({ label, value, delta, hint }: { label: string; value: string; delta?: string; hint?: string }) {
+export function Metric({ label, value, delta, hint }: { label: string; value: string; delta?: string | undefined; hint?: string | undefined }) {
   return (
     <div className="min-w-0 px-4 py-3">
       <p className="truncate text-xs text-muted-foreground">{label}</p>
@@ -75,4 +76,11 @@ export function Metric({ label, value, delta, hint }: { label: string; value: st
       {(delta || hint) && <p className="mt-0.5 truncate text-xs text-muted-foreground">{delta && <span className="text-success">{delta}</span>} {hint}</p>}
     </div>
   );
+}
+
+export function SourceBadge() {
+  const { source } = useContent();
+  if (source === "demo") return <DemoBadge />;
+  if (source === "imported") return <Badge variant="outline" className="text-muted-foreground" title="Kept in this browser only until storage is connected">TEMPORARY DATA</Badge>;
+  return null;
 }

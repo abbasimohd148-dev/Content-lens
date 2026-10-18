@@ -1,9 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { PageHeader, Panel, Metric, EvidenceItem } from "@/components/app/primitives";
+import { AiPlaceholder, EmptyContentState } from "@/components/app/states";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DEMO_CONTENT, engagement, fmt, fmtDuration, median } from "@/lib/demo-data";
+import { useContent } from "@/lib/content-repository";
+import { byTopic, engagementRate, fmt, fmtDuration, median, pct } from "@/lib/analytics";
 
 export const Route = createFileRoute("/_workspace/diagnosis")({
   validateSearch: (s: Record<string, unknown>) => ({ id: typeof s["id"] === "string" ? s["id"] : undefined }),
@@ -14,42 +16,47 @@ export const Route = createFileRoute("/_workspace/diagnosis")({
 function Diagnosis() {
   const { id } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
-  const c = DEMO_CONTENT.find((x) => x.id === id) ?? DEMO_CONTENT[0]!;
-  const med = median(DEMO_CONTENT.map((x) => x.views));
-  const medRet = median(DEMO_CONTENT.map((x) => x.retention));
-  const ratio = c.views / med;
+  const { items } = useContent();
+  const header = <PageHeader title="Diagnosis" description="Why did this content perform this way — and what should you test next?"
+    actions={<Button disabled title="Available once AI analysis is configured"><Sparkles /> Analyze Performance</Button>} />;
+  if (!items.length) return <>{header}<EmptyContentState /></>;
+
+  const c = items.find((x) => x.id === id) ?? items[0]!;
+  const others = items.filter((x) => x.id !== c.id);
+  const medViews = median(others.map((x) => x.views).filter((v): v is number => v !== null));
+  const medRet = median(others.map((x) => x.retention).filter((v): v is number => v !== null));
+  const topic = c.topic ? byTopic(items).find((t) => t.key === c.topic) : undefined;
+  const eng = engagementRate(c);
 
   return (
     <>
-      <PageHeader title="Diagnosis" description="Why did this content perform this way — and what should you test next?"
-        actions={<Button disabled title="AI analysis is available once the backend is connected"><Sparkles /> Analyze Performance</Button>} />
+      {header}
       <Select value={c.id} onValueChange={(v) => navigate({ search: { id: v } })}>
-        <SelectTrigger className="mb-4 w-full sm:w-96"><SelectValue /></SelectTrigger>
-        <SelectContent>{DEMO_CONTENT.map((x) => <SelectItem key={x.id} value={x.id}>{x.title}</SelectItem>)}</SelectContent>
+        <SelectTrigger className="mb-4 w-full sm:w-96" aria-label="Select content"><SelectValue /></SelectTrigger>
+        <SelectContent>{items.map((x) => <SelectItem key={x.id} value={x.id}>{x.title}</SelectItem>)}</SelectContent>
       </Select>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Panel title={c.title} description={`${c.platform} · ${c.topic} · ${fmtDuration(c.durationSec)}`} className="lg:col-span-1">
-          <p className="text-xs text-muted-foreground">Hook</p>
-          <p className="mt-1 text-sm">"{c.hook}"</p>
+        <Panel title={c.title} description={[c.platform, c.topic, fmtDuration(c.durationSec)].filter((x) => x && x !== "—").join(" · ")}>
+          {c.hook && <><p className="text-xs text-muted-foreground">Hook</p><p className="mt-1 text-sm">"{c.hook}"</p></>}
           <div className="-mx-4 mt-4 grid grid-cols-3 divide-x border-t">
             <Metric label="Views" value={fmt(c.views)} />
-            <Metric label="Retention" value={`${c.retention}%`} />
-            <Metric label="Engage." value={`${engagement(c).toFixed(1)}%`} />
+            <Metric label="Retention" value={pct(c.retention)} />
+            <Metric label="Engage." value={pct(eng?.value, 1)} hint={eng && eng.fieldsUsed < 4 ? `${eng.fieldsUsed}/4 fields` : undefined} />
           </div>
         </Panel>
-        <Panel title="Performance summary" description="Example analysis — illustrative layout" className="lg:col-span-2" bodyClassName="py-0">
-          <EvidenceItem kind="observed" meta={`median ${fmt(med)}`}>This post received <b>{ratio.toFixed(1)}×</b> your median views.</EvidenceItem>
-          <EvidenceItem kind="observed" meta={`median ${medRet}%`}>Retention was {c.retention}%, {c.retention >= medRet ? "above" : "below"} your historical median of {medRet}%.</EvidenceItem>
-          <EvidenceItem kind="pattern" meta={`n=${DEMO_CONTENT.filter((x) => x.topic === c.topic).length}`}>Posts in {c.topic} have {c.topic === "AI Tutorials" ? "higher" : "different"} median retention than your other topics in this dataset.</EvidenceItem>
-          <EvidenceItem kind="hypothesis">The hook states a concrete outcome up front, which may have helped early retention. This is correlation, not proof.</EvidenceItem>
+        <Panel title="Performance summary" description="Calculated from your data" className="lg:col-span-2" bodyClassName="py-0">
+          {c.views !== null && medViews ? <EvidenceItem kind="observed" meta={`median ${fmt(medViews)}`}>This post received <b>{(c.views / medViews).toFixed(1)}×</b> the median views of your other content.</EvidenceItem> : null}
+          {c.retention !== null && medRet !== null ? <EvidenceItem kind="observed" meta={`median ${pct(medRet)}`}>Retention was {pct(c.retention)}, {c.retention >= medRet ? "above" : "below"} the median of your other content.</EvidenceItem> : null}
+          {topic && !topic.lowSample && topic.lift ? <EvidenceItem kind="pattern" meta={`n=${topic.n}`}>{topic.key} posts have {topic.lift.toFixed(1)}× your overall median views.</EvidenceItem> : null}
+          {(c.views === null || !medViews) && <p className="py-4 text-sm text-muted-foreground">Not enough comparable data to summarise this post yet.</p>}
         </Panel>
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-3">
-        <Panel title="What likely helped"><ul className="list-disc space-y-1.5 pl-4 text-sm text-muted-foreground"><li>Specific, measurable promise in the hook</li><li>Duration close to your best-performing range</li></ul></Panel>
-        <Panel title="What likely hurt"><ul className="list-disc space-y-1.5 pl-4 text-sm text-muted-foreground"><li>Slower middle section (drop-off around 40%)</li><li>Topic overlap with a recent upload</li></ul></Panel>
-        <Panel title="What to test next" className="border-primary/30"><p className="text-sm">Open with the finished result before explaining the process, and keep it under 10 minutes.</p></Panel>
+        <Panel title="What likely helped"><AiPlaceholder /></Panel>
+        <Panel title="What likely hurt"><AiPlaceholder /></Panel>
+        <Panel title="What to test next"><AiPlaceholder /></Panel>
       </div>
     </>
   );

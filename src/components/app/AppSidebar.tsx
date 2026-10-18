@@ -58,7 +58,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <div className="rounded-md border border-sidebar-border bg-background p-3 text-xs group-data-[collapsible=icon]:hidden">
           <p className="font-medium">Free plan</p>
-          <p className="mt-0.5 text-muted-foreground">1 of 3 AI diagnoses used</p>
+          <p className="mt-0.5 text-muted-foreground">Usage tracking not connected yet</p>
           <Link to="/pricing" className="mt-2 inline-block font-medium text-primary hover:underline">Upgrade</Link>
         </div>
       </SidebarFooter>
