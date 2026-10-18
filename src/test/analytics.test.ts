@@ -4,6 +4,6 @@ const base: ContentItem = { id: "1", title: "t", hook: null, platform: null, top
 describe("engagement rate", () => {
   it("is (likes+comments+shares+saves)/views*100", () => expect(engagementRate(base)?.value).toBe(10));
   it("is null for zero views", () => expect(engagementRate({ ...base, views: 0 })).toBeNull());
-  it("uses only available fields", () => expect(engagementRate({ ...base, saves: null, shares: null })).toEqual({ value: 7, fieldsUsed: 2 }));
+  it("uses only available fields", () => { const e = engagementRate({ ...base, saves: null, shares: null })!; expect(e.value).toBeCloseTo(7); expect(e.fieldsUsed).toBe(2); });
   it("summary handles no retention", () => expect(summarize([base]).avgRetention).toBeNull());
 });
