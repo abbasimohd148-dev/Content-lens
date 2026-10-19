@@ -87,8 +87,8 @@ function Landing() {
         </div>
       </section>
 
-      <section id="how" className="scroll-mt-16 border-b">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section id="how" className="scroll-mt-16 border-b bg-secondary">
+        <div className="mx-auto max-w-6xl px-6 py-16">
           <h2 className="text-2xl font-semibold md:text-3xl">How it works</h2>
           <p className="mt-2 text-muted-foreground">One loop, built on your own numbers.</p>
           <ol className="mt-10 grid gap-px overflow-hidden rounded-lg border bg-border md:grid-cols-4">
@@ -106,8 +106,8 @@ function Landing() {
         </div>
       </section>
 
-      <section className="border-b">
-        <div className="mx-auto max-w-6xl space-y-20 px-6 py-20">
+      <section className="border-b bg-background">
+        <div className="mx-auto max-w-6xl space-y-16 px-6 py-16">
           <Feature eyebrow="Performance Diagnosis" title="Know why a post performed — not just that it did."
             body="Every diagnosis separates what was observed, what your data supports, and what's only a hypothesis. No causal claims your data can't back.">
             <div className="rounded-lg border bg-card px-4 shadow-card">
@@ -139,8 +139,8 @@ function Landing() {
         </div>
       </section>
 
-      <section className="border-b bg-secondary/40">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      <section className="border-b bg-secondary">
+        <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div><h2 className="text-2xl font-semibold md:text-3xl">Simple monthly pricing</h2><p className="mt-2 text-muted-foreground">Start free. Upgrade when you need more analyses.</p></div>
             <Link to="/pricing" className="text-sm font-medium text-primary hover:underline">Compare plans →</Link>
@@ -163,8 +163,9 @@ function Landing() {
         </div>
       </section>
 
-      <section>
-        <div className="mx-auto max-w-3xl px-6 py-24 text-center">
+      <section className="relative overflow-hidden">
+        <div className="dot-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
+        <div className="relative mx-auto max-w-3xl px-6 py-16 text-center">
           <h2 className="text-3xl font-semibold md:text-4xl">Your data already knows what works.</h2>
           <p className="mx-auto mt-4 max-w-lg text-muted-foreground">Import your content and let ContentLens show you the patterns — and what to try next.</p>
           <Button asChild size="lg" className="mt-8 px-6"><Link to="/signup">Analyze My Content <ArrowRight /></Link></Button>
