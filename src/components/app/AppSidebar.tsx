@@ -1,48 +1,140 @@
+import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, FileText, Stethoscope, GitCompareArrows, Sparkles, Lightbulb, CreditCard, Settings, Aperture } from "lucide-react";
 import {
-  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
-  SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
+  LayoutDashboard,
+  FileText,
+  Stethoscope,
+  GitCompareArrows,
+  Sparkles,
+  Lightbulb,
+  CreditCard,
+  Settings,
+  Aperture,
+} from "lucide-react";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+import { supabase } from "@/lib/supabase";
+import { PLANS, type PlanId } from "@/config/pricing";
+
 export const NAV = [
-  { group: "Analyze", items: [
-    { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-    { title: "Content", url: "/content", icon: FileText },
-    { title: "Diagnosis", url: "/diagnosis", icon: Stethoscope },
-    { title: "Compare", url: "/compare", icon: GitCompareArrows },
-  ]},
-  { group: "Decide", items: [
-    { title: "Winning Patterns", url: "/patterns", icon: Sparkles },
-    { title: "Recommendations", url: "/recommendations", icon: Lightbulb },
-  ]},
-  { group: "Account", items: [
-    { title: "Billing", url: "/billing", icon: CreditCard },
-    { title: "Settings", url: "/settings", icon: Settings },
-  ]},
+  {
+    group: "Analyze",
+    items: [
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+      { title: "Content", url: "/content", icon: FileText },
+      { title: "Diagnosis", url: "/diagnosis", icon: Stethoscope },
+      { title: "Compare", url: "/compare", icon: GitCompareArrows },
+    ],
+  },
+  {
+    group: "Decide",
+    items: [
+      { title: "Winning Patterns", url: "/patterns", icon: Sparkles },
+      { title: "Recommendations", url: "/recommendations", icon: Lightbulb },
+    ],
+  },
+  {
+    group: "Account",
+    items: [
+      { title: "Billing", url: "/billing", icon: CreditCard },
+      { title: "Settings", url: "/settings", icon: Settings },
+    ],
+  },
 ] as const;
 
 export function AppSidebar() {
-  const path = useRouterState({ select: (r) => r.location.pathname });
+  const path = useRouterState({
+    select: (r) => r.location.pathname,
+  });
+
+  const [planName, setPlanName] = useState("Loading plan...");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadPlan() {
+      try {
+        const { data, error } = await supabase.rpc(
+          "get_my_billing_usage",
+        );
+
+        if (error) throw error;
+
+        const billing = Array.isArray(data) ? data[0] : data;
+
+        if (!billing) {
+          throw new Error("Billing information not found.");
+        }
+
+        const planId = Object.prototype.hasOwnProperty.call(
+          PLANS,
+          billing.plan_id,
+        )
+          ? (billing.plan_id as PlanId)
+          : "free";
+
+        if (active) {
+          setPlanName(PLANS[planId].name);
+        }
+      } catch (error) {
+        console.error("Could not load sidebar plan:", error);
+
+        if (active) {
+          setPlanName("View your plan");
+        }
+      }
+    }
+
+    void loadPlan();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <Link to="/" className="flex h-9 items-center gap-2 px-1 font-display font-semibold">
+        <Link
+          to="/"
+          className="flex h-9 items-center gap-2 px-1 font-display font-semibold"
+        >
           <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground">
             <Aperture className="h-4 w-4" />
           </span>
-          <span className="truncate group-data-[collapsible=icon]:hidden">Content<span className="text-primary">Lens</span></span>
+
+          <span className="truncate group-data-[collapsible=icon]:hidden">
+            Content<span className="text-primary">Lens</span>
+          </span>
         </Link>
       </SidebarHeader>
+
       <SidebarContent>
         {NAV.map((g) => (
           <SidebarGroup key={g.group}>
             <SidebarGroupLabel>{g.group}</SidebarGroupLabel>
+
             <SidebarGroupContent>
               <SidebarMenu>
                 {g.items.map((item) => (
                   <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton asChild isActive={path.startsWith(item.url)} tooltip={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={path.startsWith(item.url)}
+                      tooltip={item.title}
+                    >
                       <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
@@ -55,11 +147,21 @@ export function AppSidebar() {
           </SidebarGroup>
         ))}
       </SidebarContent>
+
       <SidebarFooter>
         <div className="rounded-md border border-sidebar-border bg-background p-3 text-xs group-data-[collapsible=icon]:hidden">
-          <p className="font-medium">Free plan</p>
-          <p className="mt-0.5 text-muted-foreground">Usage tracking not connected yet</p>
-          <Link to="/pricing" className="mt-2 inline-block font-medium text-primary hover:underline">Upgrade</Link>
+          <p className="font-medium">{planName}</p>
+
+          <p className="mt-0.5 text-muted-foreground">
+            Monthly usage tracking active
+          </p>
+
+          <Link
+            to="/billing"
+            className="mt-2 inline-block font-medium text-primary hover:underline"
+          >
+            View billing
+          </Link>
         </div>
       </SidebarFooter>
     </Sidebar>
