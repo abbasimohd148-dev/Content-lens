@@ -34,9 +34,24 @@ export function SiteNav() {
 export function SiteFooter() {
   return (
     <footer className="border-t">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground md:flex-row">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-6 py-8 text-sm text-muted-foreground md:flex-row">
         <Logo />
-        <p>© {new Date().getFullYear()} ContentLens. Insights from your own data — no viral promises.</p>
+
+        <nav className="flex flex-wrap justify-center gap-5">
+          <Link to="/terms" className="hover:text-foreground">
+            Terms of Service
+          </Link>
+          <Link to="/privacy" className="hover:text-foreground">
+            Privacy Policy
+          </Link>
+          <Link to="/refund" className="hover:text-foreground">
+            Refund Policy
+          </Link>
+        </nav>
+
+        <p className="text-center">
+          © {new Date().getFullYear()} ContentLens. Insights from your own data — no viral promises.
+        </p>
       </div>
     </footer>
   );
